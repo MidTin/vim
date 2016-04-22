@@ -15,7 +15,6 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'jnurmine/Zenburn'
 Plugin 'taglist.vim'
-Plugin 'tmhedberg/SimpylFold'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 "Plugin 'Shougo/vimproc.vim'
@@ -27,17 +26,9 @@ end
 call vundle#end()  
 filetype plugin indent on
 
-"==== Enable folding
-set foldmethod=indent
-set foldlevel=99
-nnoremap <space> za
-
-"==== SimpylFold
-let g:SimpylFold_docstring_preview = 1
-autocmd BufWinEnter *.py setlocal foldexpr=SimpylFold(v:lnum) foldmethod=expr
-autocmd BufWinLeave *.py setlocal foldexpr< foldmethod<
-
 "==== basic settings
+let mapleader=","
+
 set nu
 set backspace=indent,eol,start
 set nobackup
@@ -71,7 +62,6 @@ au BufNewFile,BufRead *.py
 \ set tabstop=2 |
 \ set softtabstop=2 |
 \ set shiftwidth=2 |
-\ set textwidth=80 |
 \ set fileformat=unix |
 
 au BufNewFile,BufRead *.js,*.html,*.css
