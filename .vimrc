@@ -16,7 +16,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'jnurmine/Zenburn'
 Plugin 'taglist.vim'
 Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
+Plugin 'vim-syntastic/syntastic'
 "Plugin 'Shougo/vimproc.vim'
 "Plugin 'Shougo/unite.vim'
 if v:version > 703
@@ -59,9 +59,9 @@ endif
 nnoremap ;q :q!<CR>
 
 au BufNewFile,BufRead *.py
-\ set tabstop=2 |
-\ set softtabstop=2 |
-\ set shiftwidth=2 |
+\ set tabstop=4 |
+\ set softtabstop=4 |
+\ set shiftwidth=4 |
 \ set fileformat=unix |
 
 au BufNewFile,BufRead *.js,*.html,*.css
@@ -79,7 +79,7 @@ let NERDTreeIgnore=['\.pyc$', '\.orig$', '\~$'] "ignore files in NERDTree
 let g:syntastic_python_checkers=['pylama']
 let g:syntastic_python_pylama_args='-l pep8,mccabe,pylint'
 let g:syntastic_python_pylama_args='-i W0311,E111,E121,E114,C901,E501'
-let g:syntastic_python_python_exec='/usr/bin/python'
+let g:syntastic_python_python_exec='python'
 
 "PHP
 let g:syntastic_php_checkers=['php']
@@ -92,6 +92,7 @@ let g:syntastic_check_on_open=1
 set completeopt-=preview
 let g:ycm_echo_current_diagnostic = 0
 let g:ycm_key_detailed_diagnostics = 0
+let g:ycm_python_binary_path = 'python'
 nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 "==== taglist
