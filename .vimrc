@@ -17,11 +17,14 @@ Plugin 'jnurmine/Zenburn'
 Plugin 'taglist.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'vim-syntastic/syntastic'
+Plugin 'Chiel92/vim-autoformat'
 "Plugin 'Shougo/vimproc.vim'
 "Plugin 'Shougo/unite.vim'
 if v:version > 703
     Plugin 'Valloric/YouCompleteMe'
 end
+
+Plugin 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 call vundle#end()  
 filetype plugin indent on
@@ -55,6 +58,11 @@ if (exists('+colorcolumn'))
     set colorcolumn=80
     highlight ColorColumn ctermbg=9
 endif
+
+command Pdb :call append('.', 'import pdb;pdb.set_trace()')
+command Ipdb :call append('.', 'import ipdb;ipdb.set_trace()')
+
+nmap ;p :Ipdb<CR>
 
 nnoremap ;q :q!<CR>
 
@@ -106,7 +114,7 @@ let Tlist_File_Fold_Auto_Close=1
 let Tlist_Show_One_File=1  
 let Tlist_Use_Right_Window=1  
 let Tlist_Use_SingleClick=1  
-let Tlist_Ctags_Cmd="/usr/local/Cellar/ctags/5.8/bin/ctags" 
+let Tlist_Ctags_Cmd="$(which ctags)" 
 nnoremap <silent> <F8> :TlistToggle<CR>
 
 "==== Auto Reload
@@ -123,3 +131,17 @@ endif
 
 "==== ctrlp
 let g:ctrlp_map='<c-p>'
+
+
+"==== powerline
+let g:powerline_pycmd='py'
+let g:powerline_pyeval='pyeval'
+
+"set guifont=Meslo\ LG\ M\ Regular\ for\ Powerline:h15
+set guifont=Inconsolata\ for\ Powerline:h15
+let g:Powerline_symbols = 'fancy'
+set t_Co=256
+set encoding=utf-8
+set fillchars+=stl:\ ,stlnc:\
+set termencoding=utf-8
+set term=xterm-256color
