@@ -66,6 +66,9 @@ nmap ;p :Ipdb<CR>
 
 nnoremap ;q :q!<CR>
 
+nnoremap ;n :lnext<CR>
+nnoremap ;N :lprevious<CR>
+
 au BufNewFile,BufRead *.py
 \ set tabstop=4 |
 \ set softtabstop=4 |
@@ -88,6 +91,14 @@ let g:syntastic_python_checkers=['pylama']
 let g:syntastic_python_pylama_args='-l pep8,mccabe,pylint'
 let g:syntastic_python_pylama_args='-i W0311,E111,E121,E114,C901,E501'
 let g:syntastic_python_python_exec='python'
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
 "PHP
 let g:syntastic_php_checkers=['php']
@@ -145,3 +156,8 @@ set encoding=utf-8
 set fillchars+=stl:\ ,stlnc:\
 set termencoding=utf-8
 set term=xterm-256color
+
+"==== autoformat
+noremap <F3> :Autoformat<CR>
+let g:autoformat_autoindent = 0
+let g:formatter_yapf_style = 'pep8'
