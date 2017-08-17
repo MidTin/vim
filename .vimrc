@@ -25,6 +25,13 @@ if v:version > 703
 end
 
 Plugin 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
+Plugin 'suan/vim-instant-markdown'
+
+"=== Plugin for markdown
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'dhruvasagar/vim-table-mode'
+Plugin 'mzlogin/vim-markdown-toc'
 
 call vundle#end()  
 filetype plugin indent on
@@ -53,6 +60,7 @@ set ignorecase
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
+filetype plugin on
 
 if (exists('+colorcolumn'))
     set colorcolumn=80
@@ -161,3 +169,18 @@ set term=xterm-256color
 noremap <F3> :Autoformat<CR>
 let g:autoformat_autoindent = 0
 let g:formatter_yapf_style = 'pep8'
+
+
+"==== vim-markdown
+"let g:vim_markdown_new_list_item_indent = 2
+nmap <silent> <F9> :Toc<CR>
+let g:vim_markdown_folding_disabled = 1
+
+
+"=== vim-table-mode
+let g:table_mode_corner='|'
+
+
+"=== vim-markdown-toc
+"let g:vmt_dont_insert_fence = 1
+nmap <leader>cto :GenTocGFM<CR>
