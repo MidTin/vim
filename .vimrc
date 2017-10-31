@@ -20,18 +20,21 @@ Plugin 'vim-syntastic/syntastic'
 Plugin 'Chiel92/vim-autoformat'
 "Plugin 'Shougo/vimproc.vim'
 "Plugin 'Shougo/unite.vim'
+Plugin 'vim-scripts/DrawIt'
+
 if v:version > 703
     Plugin 'Valloric/YouCompleteMe'
 end
 
 Plugin 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
-Plugin 'suan/vim-instant-markdown'
+
 
 "=== Plugin for markdown
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'dhruvasagar/vim-table-mode'
 Plugin 'mzlogin/vim-markdown-toc'
+Plugin 'suan/vim-instant-markdown'
 
 call vundle#end()  
 filetype plugin indent on
@@ -73,9 +76,24 @@ command Ipdb :call append('.', 'import ipdb;ipdb.set_trace()')
 nmap ;p :Ipdb<CR>
 
 nnoremap ;q :q!<CR>
-
 nnoremap ;n :lnext<CR>
 nnoremap ;N :lprevious<CR>
+nmap ;di :DIstart<CR>
+nmap ;ds :DIstop<CR>
+
+"====== Custom functions
+
+function! s:InsertPyEncoding(encode)
+    let s:cursor_pos = getcurpos()[1:]
+    call cursor(1, 1)
+    put! = '# -*- coding: ' . a:encode . ' -*-'
+    call cursor(s:cursor_pos)
+endfunction
+
+"==== end
+
+command! InsertUTF8 :call <SID>InsertPyEncoding('utf-8')
+nmap ;8 :InsertUTF8<CR>
 
 au BufNewFile,BufRead *.py
 \ set tabstop=4 |
@@ -92,12 +110,12 @@ nnoremap <F5> :set hlsearch! hlsearch?<CR>
 
 "==== NERDTree
 map <F7> :NERDTreeToggle<CR>
-let NERDTreeIgnore=['\.pyc$', '\.orig$', '\~$'] "ignore files in NERDTree
+let NERDTreeIgnore=['\.swp', '__pycache__', '\.pyc$', '\.orig$', '\~$'] "ignore files in NERDTree
 
 "==== syntastic settings
 let g:syntastic_python_checkers=['pylama']
 let g:syntastic_python_pylama_args='-l pep8,mccabe,pylint'
-let g:syntastic_python_pylama_args='-i W0311,E111,E121,E114,C901,E501'
+let g:syntastic_python_pylama_args='-i W0311,E111,E121,E114,C901,E501,W0401'
 let g:syntastic_python_python_exec='python'
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -136,12 +154,6 @@ let Tlist_Use_SingleClick=1
 let Tlist_Ctags_Cmd="$(which ctags)" 
 nnoremap <silent> <F8> :TlistToggle<CR>
 
-"==== Auto Reload
-augroup myvimrchooks
-    au!
-    autocmd bufwritepost .vimrc source ~/.vimrc
-augroup END
-
 "==== Color Scheme
 if has('gui_running')
    set background=dark
@@ -154,7 +166,6 @@ let g:ctrlp_map='<c-p>'
 
 "==== powerline
 let g:powerline_pycmd='py'
-let g:powerline_pyeval='pyeval'
 
 "set guifont=Meslo\ LG\ M\ Regular\ for\ Powerline:h15
 set guifont=Inconsolata\ for\ Powerline:h15
@@ -164,6 +175,9 @@ set encoding=utf-8
 set fillchars+=stl:\ ,stlnc:\
 set termencoding=utf-8
 set term=xterm-256color
+set laststatus=2 " Always display the statusline in all windows
+"set showtabline=2 " Always display the tabline, even if there is only one tab
+set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
 
 "==== autoformat
 noremap <F3> :Autoformat<CR>
