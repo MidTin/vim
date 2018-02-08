@@ -34,9 +34,14 @@ Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'dhruvasagar/vim-table-mode'
 Plugin 'mzlogin/vim-markdown-toc'
-Plugin 'suan/vim-instant-markdown'
+Plugin 'iamcco/markdown-preview.vim'
+
+"=== Plugin for ReStructuredText
+Plugin 'Rykka/riv.vim'
+Plugin 'Rykka/InstantRst'
 
 call vundle#end()  
+
 filetype plugin indent on
 
 "==== basic settings
@@ -63,6 +68,11 @@ set ignorecase
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
+
+set noimd
+set imi=2
+set ims=2
+
 filetype plugin on
 
 if (exists('+colorcolumn'))
@@ -110,7 +120,8 @@ nnoremap <F5> :set hlsearch! hlsearch?<CR>
 
 "==== NERDTree
 map <F7> :NERDTreeToggle<CR>
-let NERDTreeIgnore=['\.swp', '__pycache__', '\.pyc$', '\.orig$', '\~$'] "ignore files in NERDTree
+let NERDTreeIgnore=['.idea', '.git$', '\.swp', '__pycache__', '\.pyc$', '\.orig$', '.python-version'] "ignore files in NERDTree
+let NERDTreeShowHidden=1
 
 "==== syntastic settings
 let g:syntastic_python_checkers=['pylama']
@@ -129,6 +140,10 @@ let g:syntastic_check_on_wq = 0
 "PHP
 let g:syntastic_php_checkers=['php']
 let g:syntastic_check_on_open=1
+
+"ReStructuredText
+let g:syntastic_rst_checkers=['rstcheck']
+let g:syntastic_rst_sphinx_source_dir='.'
 
 "==== YouCompleteMe
 "let g:ycm_autoclose_preview_window_after_completion=1
@@ -181,8 +196,9 @@ set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusl
 
 "==== autoformat
 noremap <F3> :Autoformat<CR>
-let g:autoformat_autoindent = 0
-let g:formatter_yapf_style = 'pep8'
+let g:autoformat_autoindent=0
+let g:formatdef_custom_yapf="'yapf --style=\"{based_on_style: pep8, ALLOW_SPLIT_BEFORE_DICT_VALUE: false, BLANK_LINE_BEFORE_NESTED_CLASS_OR_DEF: 1, COLUMN_LIMIT: 80}\"'"
+let g:formatters_python=['custom_yapf']
 
 
 "==== vim-markdown
@@ -198,3 +214,14 @@ let g:table_mode_corner='|'
 "=== vim-markdown-toc
 "let g:vmt_dont_insert_fence = 1
 nmap <leader>cto :GenTocGFM<CR>
+
+
+"=== markdown-preview
+let g:mkdp_auto_open = 0
+let g:mkdp_auto_close = 1
+let g:mkdp_path_to_chrome = "open -a Google\\ Chrome"
+let g:mkdp_auto_start = 0
+
+
+"=== InstantRst
+let g:instant_rst_localhost_only=1
