@@ -21,6 +21,7 @@ Plugin 'Chiel92/vim-autoformat'
 "Plugin 'Shougo/vimproc.vim'
 "Plugin 'Shougo/unite.vim'
 Plugin 'vim-scripts/DrawIt'
+Plugin 'rking/ag.vim'
 
 if v:version > 703
     Plugin 'Valloric/YouCompleteMe'
@@ -69,9 +70,11 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 
-set noimd
-set imi=2
-set ims=2
+if has("gui_macvim")
+    set noimd
+    set imi=2
+    set ims=2
+endif
 
 filetype plugin on
 
@@ -120,13 +123,13 @@ nnoremap <F5> :set hlsearch! hlsearch?<CR>
 
 "==== NERDTree
 map <F7> :NERDTreeToggle<CR>
-let NERDTreeIgnore=['.idea', '.git$', '\.swp', '__pycache__', '\.pyc$', '\.orig$', '.python-version'] "ignore files in NERDTree
+let NERDTreeIgnore=['.idea', '.git$', '\.swp', '__pycache__', '\.pyc$', '\.orig$', '.python-version']
 let NERDTreeShowHidden=1
 
 "==== syntastic settings
 let g:syntastic_python_checkers=['pylama']
 let g:syntastic_python_pylama_args='-l pep8,mccabe,pylint'
-let g:syntastic_python_pylama_args='-i W0311,E111,E121,E114,C901,E501,W0401'
+let g:syntastic_python_pylama_args='-i E402,W0311,E111,E121,E114,C901,E501,W0401'
 let g:syntastic_python_python_exec='python'
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -225,3 +228,7 @@ let g:mkdp_auto_start = 0
 
 "=== InstantRst
 let g:instant_rst_localhost_only=1
+
+
+"=== ag.vim
+let g:ag_highlight=1
