@@ -1,0 +1,113 @@
+"==== Vundle
+set nocompatible
+filetype off
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'taglist.vim'
+Plugin 'scrooloose/nerdtree'
+
+call vundle#end()  
+
+filetype plugin indent on
+
+"==== basic settings
+let mapleader=","
+
+set nu
+set backspace=indent,eol,start
+set nobackup
+set history=10
+set ruler	"Always display the current cursor position in the lower right corner of the
+            "Vim window.
+
+set incsearch	"Display the match for a search pattern when halfway typing it.
+set fileencoding=utf-8
+set fileencodings=utf-8
+
+set expandtab
+set autoindent
+
+set showmatch
+set syntax=on
+set background=dark
+set ignorecase
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+
+filetype plugin on
+
+if (exists('+colorcolumn'))
+    set colorcolumn=80
+    highlight ColorColumn ctermbg=9
+endif
+
+command Pdb :call append('.', 'import pdb;pdb.set_trace()')
+command Ipdb :call append('.', 'import ipdb;ipdb.set_trace()')
+
+nmap ;p :Ipdb<CR>
+
+nnoremap ;q :q!<CR>
+nnoremap ;n :lnext<CR>
+nnoremap ;N :lprevious<CR>
+nmap ;di :DIstart<CR>
+nmap ;ds :DIstop<CR>
+
+"====== Custom functions
+
+function! s:InsertPyEncoding(encode)
+    let s:cursor_pos = getcurpos()[1:]
+    call cursor(1, 1)
+    put! = '# -*- coding: ' . a:encode . ' -*-'
+    call cursor(s:cursor_pos)
+endfunction
+
+"==== end
+
+command! InsertUTF8 :call <SID>InsertPyEncoding('utf-8')
+nmap ;8 :InsertUTF8<CR>
+
+au BufNewFile,BufRead *.py
+\ set tabstop=4 |
+\ set softtabstop=4 |
+\ set shiftwidth=4 |
+\ set fileformat=unix |
+
+au BufNewFile,BufRead *.js,*.html,*.css
+\ set tabstop=2 |
+\ set softtabstop=2 |
+\ set shiftwidth=2 |
+
+nnoremap <F5> :set hlsearch! hlsearch?<CR>
+
+"==== NERDTree
+map <F7> :NERDTreeToggle<CR>
+let NERDTreeIgnore=['.idea', '.git$', '\.swp', '__pycache__', '\.pyc$', '\.orig$', '.python-version']
+let NERDTreeShowHidden=1
+
+
+"==== taglist
+let Tlist_Auto_Highlight_Tag=1  
+let Tlist_Auto_Open=0
+let Tlist_Auto_Update=1  
+let Tlist_Display_Tag_Scope=1  
+let Tlist_Exit_OnlyWindow=1  
+let Tlist_Enable_Dold_Column=1  
+let Tlist_File_Fold_Auto_Close=1  
+let Tlist_Show_One_File=1  
+let Tlist_Use_Right_Window=1  
+let Tlist_Use_SingleClick=1  
+let Tlist_Ctags_Cmd="$(which ctags)" 
+nnoremap <silent> <F8> :TlistToggle<CR>
+
+"==== ctrlp
+let g:ctrlp_map='<c-p>'

@@ -22,6 +22,8 @@ Plugin 'Chiel92/vim-autoformat'
 "Plugin 'Shougo/unite.vim'
 Plugin 'vim-scripts/DrawIt'
 Plugin 'rking/ag.vim'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'tpope/vim-fugitive'
 
 if v:version > 703
     Plugin 'Valloric/YouCompleteMe'
@@ -71,9 +73,9 @@ set softtabstop=4
 set shiftwidth=4
 
 if has("gui_macvim")
-    set noimd
-    set imi=2
-    set ims=2
+    " set noimd
+    " set imi=2
+    " set ims=2
 endif
 
 filetype plugin on
@@ -185,12 +187,12 @@ let g:ctrlp_map='<c-p>'
 "==== powerline
 let g:powerline_pycmd='py'
 
-"set guifont=Meslo\ LG\ M\ Regular\ for\ Powerline:h15
-set guifont=Inconsolata\ for\ Powerline:h15
+set guifont=Meslo\ LG\ M\ Regular\ for\ Powerline:h12.5
+"set guifont=Inconsolata\ for\ Powerline:h15
 let g:Powerline_symbols = 'fancy'
 set t_Co=256
 set encoding=utf-8
-set fillchars+=stl:\ ,stlnc:\
+"set fillchars+=stl:\ ,stlnc:\
 set termencoding=utf-8
 set term=xterm-256color
 set laststatus=2 " Always display the statusline in all windows
@@ -232,3 +234,10 @@ let g:instant_rst_localhost_only=1
 
 "=== ag.vim
 let g:ag_highlight=1
+
+"=== vim-multiple-cursors
+let g:multi_cursor_use_default_mapping=0
+let g:multi_cursor_next_key='<C-j>'
+let g:multi_cursor_prev_key='<C-k>'
+let g:multi_cursor_skip_key='<C-x>'
+let g:multi_cursor_quit_key='<Esc>'
