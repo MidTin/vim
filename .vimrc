@@ -1,105 +1,83 @@
-"==== Vundle
+"=======================================
+" Base Settings
+"=======================================
 set nocompatible
-filetype off
+filetype on
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'jnurmine/Zenburn'
-Plugin 'taglist.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'vim-syntastic/syntastic'
-Plugin 'Chiel92/vim-autoformat'
-"Plugin 'Shougo/vimproc.vim'
-"Plugin 'Shougo/unite.vim'
-Plugin 'vim-scripts/DrawIt'
-Plugin 'rking/ag.vim'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'tpope/vim-fugitive'
-
-if v:version > 703
-    Plugin 'Valloric/YouCompleteMe'
-end
-
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-"Plugin 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
-
-
-"=== Plugin for markdown
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'dhruvasagar/vim-table-mode'
-Plugin 'mzlogin/vim-markdown-toc'
-Plugin 'iamcco/markdown-preview.vim'
-
-"=== Plugin for ReStructuredText
-Plugin 'Rykka/riv.vim'
-Plugin 'Rykka/InstantRst'
-
-call vundle#end()
-
-filetype plugin indent on
-
-"==== basic settings
-let mapleader=","
-
-set nu
+set autoindent
+set background=light
 set backspace=indent,eol,start
-set nobackup
-set history=10
-set ruler	"Always display the current cursor position in the lower right corner of the
-            "Vim window.
-
-set incsearch	"Display the match for a search pattern when halfway typing it.
+set expandtab
 set fileencoding=utf-8
 set fileencodings=utf-8
-
-set expandtab
-set autoindent
-
-set showmatch
-set syntax=on
-set background=dark
+set history=20
 set ignorecase
+set incsearch
+set nobackup
+set nu
+set ruler
+set showmatch
 set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-
-if has("gui_macvim")
-    " set noimd
-    " set imi=2
-    " set ims=2
-endif
-
-filetype plugin on
+syntax on
 
 if (exists('+colorcolumn'))
     set colorcolumn=80
-    highlight ColorColumn ctermbg=9
+    highlight ColorColumn ctermbg = 9
 endif
 
-command Pdb :call append('.', 'import pdb;pdb.set_trace()')
-command Ipdb :call append('.', 'import ipdb;ipdb.set_trace()')
+"=======================================
+" Commands
+"=======================================
+augroup ft
+    autocmd!
+    autocmd FileType python setlocal
+      \ shiftwidth=4
+      \ softtabstop=4
+      \ tabstop=8
 
-nmap ;p :Ipdb<CR>
+    autocmd FileType html setlocal
+      \ shiftwidth=2
+      \ softtabstop=2
+
+    autocmd FileType yaml,yml setlocal
+      \ shiftwidth=2
+      \ softtabstop=2
+augroup END
+
+command! Pdb :call append('.', 'import pdb;pdb.set_trace()')
+command! Ipdb :call append('.', 'import ipdb;ipdb.set_trace()')
+
+augroup unset_folding_in_insert_mode
+    autocmd!
+    autocmd InsertEnter *.py setlocal foldmethod=marker
+    autocmd InsertLeave *.py setlocal foldmethod=expr
+augroup END
+
+
+"=======================================
+" Common Key Bindings
+"=======================================
+let mapleader = ","
 
 nnoremap ;q :q!<CR>
 nnoremap ;n :lnext<CR>
 nnoremap ;N :lprevious<CR>
-nmap ;di :DIstart<CR>
-nmap ;ds :DIstop<CR>
+nnoremap <F5> :set hlsearch! hlsearch?<CR>
+command! InsertUTF8 :call <SID>InsertPyEncoding('utf-8')
+nmap ;8 :InsertUTF8<CR>
+nmap ;p :Ipdb<CR>
 
-"====== Custom functions
+" switch tabline
+nnoremap ;<Tab> :bn<CR>
+nnoremap ;<S-Tab> :bp<CR>
 
+
+
+"=======================================
+" Custom Functions
+"=======================================
+
+" insert encoding header
 function! s:InsertPyEncoding(encode)
     let s:cursor_pos = getcurpos()[1:]
     call cursor(1, 1)
@@ -107,35 +85,116 @@ function! s:InsertPyEncoding(encode)
     call cursor(s:cursor_pos)
 endfunction
 
-"==== end
 
-command! InsertUTF8 :call <SID>InsertPyEncoding('utf-8')
-nmap ;8 :InsertUTF8<CR>
 
-au BufNewFile,BufRead *.py
-\ set tabstop=4 |
-\ set softtabstop=4 |
-\ set shiftwidth=4 |
-\ set fileformat=unix |
 
-au BufNewFile,BufRead *.js,*.html,*.css
-\ set tabstop=2 |
-\ set softtabstop=2 |
-\ set shiftwidth=2 |
 
-nnoremap <F5> :set hlsearch! hlsearch?<CR>
+"=======================================
+" vim-plug
+" https://github.com/junegunn/vim-plug
+"=======================================
+call plug#begin('~/.vim/plugged')
 
-"==== NERDTree
-map <F7> :NERDTreeToggle<CR>
-let NERDTreeIgnore=['.idea', '.git$', '\.swp', '__pycache__', '.vscode', '\.pyc$', '\.orig$', '.python-version']
-let NERDTreeShowHidden=1
-nmap ,cf :NERDTreeFind<CR>
+" completion: https://github.com/ycm-core/YouCompleteMe
+Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --clang-completer --js-completer' }
 
-"==== syntastic settings
-let g:syntastic_python_checkers=['pylama']
-let g:syntastic_python_pylama_args='-l pep8,mccabe,pylint'
-let g:syntastic_python_pylama_args='-i E402,W0311,E111,E121,E114,C901,E501,W0401'
-let g:syntastic_python_python_exec='python'
+" syntastic checker https://github.com/scrooloose/syntastic
+Plug 'scrooloose/syntastic'
+
+" statusline: https://github.com/vim-airline/vim-airline
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" file search: https://github.com/ctrlpvim/ctrlp.vim
+Plug 'ctrlpvim/ctrlp.vim'
+
+" themes: https://github.com/morhetz/gruvbox
+Plug 'morhetz/gruvbox'
+
+" file tree: https://github.com/scrooloose/nerdtree
+Plug 'scrooloose/nerdtree'
+
+" outline viewer: https://github.com/majutsushi/tagbar
+Plug 'majutsushi/tagbar'
+
+" full text search: https://github.com/mileszs/ack.vim
+Plug 'mileszs/ack.vim'
+
+" code format: https://github.com/chiel92/vim-autoformat
+Plug 'chiel92/vim-autoformat'
+
+call plug#end()
+
+
+
+"=======================================
+" YouCompleteMe
+"=======================================
+" Python
+
+pythonx << EOF
+import vim
+import json
+
+sys_path_str = vim.eval('system("python -c \'import sys; print(sys.path)\'")')
+vim.command('let g:ycm_python_sys_path=%s' % sys_path_str)
+
+EOF
+
+let g:ycm_python_interpreter_path = trim(system('which python'))
+let g:ycm_extra_conf_vim_data = [
+    \  'g:ycm_python_interpreter_path',
+    \  'g:ycm_python_sys_path',
+    \]
+let g:ycm_filetype_specific_completion_to_disable = {
+    \ 'gitcommit': 1
+    \}
+let g:ycm_complete_in_comments = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_confirm_extra_conf = 0
+
+nnoremap <leader>g :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>f :YcmCompleter GoToDeclaration<CR>
+nnoremap <leader>r :YcmCompleter GoToReferences<CR>
+nnoremap <leader>d :YcmCompleter GetDoc<CR>
+
+
+
+"=======================================
+" vim-airline
+"=======================================
+set guifont=Meslo\ LG\ M\ Regular\ for\ Powerline:h13.5
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#formatter = 'default'
+let g:airline#extensions#tabline#tab_nr_type = 1
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'solarized'
+set noshowmode
+
+
+"=======================================
+" vim-ctrlp
+"=======================================
+let g:ctrlp_map='<c-p>'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)|(__pycache__)$',
+  \ 'file': '\v\.(exe|so|dll|swp|pyc)$',
+  \ }
+
+
+"=======================================
+" Color
+"=======================================
+colorscheme gruvbox
+
+
+"=======================================
+" vim-syntastic
+"=======================================
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -145,105 +204,34 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-"PHP
-let g:syntastic_php_checkers=['php']
-let g:syntastic_check_on_open=1
+let g:syntastic_python_checkers = ['pylama']
+let g:syntastic_python_pylama_args='-l pyflakes,pep8,mccabe,pylint -i E403,W0311,E111,E121,E114,C901,E501,W0401'
 
-"ReStructuredText
-let g:syntastic_rst_checkers=['rstcheck']
-let g:syntastic_rst_sphinx_source_dir='.'
-
-"==== YouCompleteMe
-"let g:ycm_autoclose_preview_window_after_completion=1
-"let g:ycm_autoclose_preview_window_after_insertion=1
-"let g:ycm_add_preview_to_completeopt=0
-set completeopt-=preview
-let g:ycm_echo_current_diagnostic = 0
-let g:ycm_key_detailed_diagnostics = 0
-let g:ycm_python_binary_path = 'python'
-nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
-
-"==== taglist
-let Tlist_Auto_Highlight_Tag=1
-let Tlist_Auto_Open=0
-let Tlist_Auto_Update=1
-let Tlist_Display_Tag_Scope=1
-let Tlist_Exit_OnlyWindow=1
-let Tlist_Enable_Dold_Column=1
-let Tlist_File_Fold_Auto_Close=1
-let Tlist_Show_One_File=1
-let Tlist_Use_Right_Window=1
-let Tlist_Use_SingleClick=1
-let Tlist_Ctags_Cmd="$(which ctags)"
-nnoremap <silent> <F8> :TlistToggle<CR>
-
-"==== Color Scheme
-if has('gui_running')
-   set background=dark
-   colorscheme solarized
-endif
-
-"==== ctrlp
-let g:ctrlp_map='<c-p>'
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)|(__pycache__)$',
-  \ 'file': '\v\.(exe|so|dll|swp|pyc)$',
-  \ }
+let g:syntastic_yaml_checkers = ['yamlxs', 'jsyaml']
 
 
-"==== airline
-set guifont=Meslo\ LG\ M\ Regular\ for\ Powerline:h13.5
-"set guifont=Inconsolata\ for\ Powerline:h15
-let g:airline_powerline_fonts = 1
-let g:airline_theme='powerlineish'
-set t_Co=256
-set encoding=utf-8
-set fillchars+=stl:\ ,stlnc:\
-set termencoding=utf-8
-set term=xterm-256color
-set laststatus=2 " Always display the statusline in all windows
-"set showtabline=2 " Always display the tabline, even if there is only one tab
-set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
+"=======================================
+" NERDTreee
+"=======================================
+let NERDTreeIgnore=['.idea', '.git$', '\.swp', '__pycache__', '.vscode', '\.pyc$', '\.orig$', '.python-version']
+let NERDTreeShowHidden=1
+let NERDTreeNodeDelimiter="\u00a0"
 
-"==== autoformat
+nmap <leader>cf :NERDTreeFind<CR>
+nnoremap <F7> :NERDTreeToggle<CR>
+
+
+"=======================================
+" vim-tagbar
+"=======================================
+nnoremap <silent> <F8> :TagbarToggle<CR>
+
+
+"=======================================
+" vim-tagbar
+"=======================================
 noremap <F3> :Autoformat<CR>
-let g:autoformat_autoindent=0
-let g:formatdef_custom_yapf="'yapf --style=\"{based_on_style: pep8, ALLOW_SPLIT_BEFORE_DICT_VALUE: false, BLANK_LINE_BEFORE_NESTED_CLASS_OR_DEF: 1, COLUMN_LIMIT: 80}\"'"
-let g:formatters_python=['custom_yapf']
 
-
-"==== vim-markdown
-"let g:vim_markdown_new_list_item_indent = 2
-nmap <silent> <F9> :Toc<CR>
-let g:vim_markdown_folding_disabled = 1
-
-
-"=== vim-table-mode
-let g:table_mode_corner='|'
-
-
-"=== vim-markdown-toc
-"let g:vmt_dont_insert_fence = 1
-nmap <leader>cto :GenTocGFM<CR>
-
-
-"=== markdown-preview
-let g:mkdp_auto_open = 0
-let g:mkdp_auto_close = 1
-let g:mkdp_path_to_chrome = "open -a Google\\ Chrome"
-let g:mkdp_auto_start = 0
-
-
-"=== InstantRst
-let g:instant_rst_localhost_only=1
-
-
-"=== ag.vim
-let g:ag_highlight=1
-
-"=== vim-multiple-cursors
-let g:multi_cursor_use_default_mapping=0
-let g:multi_cursor_next_key='<C-j>'
-let g:multi_cursor_prev_key='<C-k>'
-let g:multi_cursor_skip_key='<C-x>'
-let g:multi_cursor_quit_key='<Esc>'
+let g:autoformat_autoindent = 1
+let g:formatdef_custom_yapf = "'yapf --style=\"{based_on_style: pep8, ALLOW_SPLIT_BEFORE_DICT_VALUE: false, BLANK_LINE_BEFORE_NESTED_CLASS_OR_DEF: 1, COLUMN_LIMIT: 80, SPACES_BEFORE_COMMENT: (15,20), }\"'"
+let g:formatters_python = ['custom_yapf']
