@@ -29,7 +29,9 @@ if v:version > 703
     Plugin 'Valloric/YouCompleteMe'
 end
 
-Plugin 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+"Plugin 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 
 "=== Plugin for markdown
@@ -43,7 +45,7 @@ Plugin 'iamcco/markdown-preview.vim'
 Plugin 'Rykka/riv.vim'
 Plugin 'Rykka/InstantRst'
 
-call vundle#end()  
+call vundle#end()
 
 filetype plugin indent on
 
@@ -125,8 +127,9 @@ nnoremap <F5> :set hlsearch! hlsearch?<CR>
 
 "==== NERDTree
 map <F7> :NERDTreeToggle<CR>
-let NERDTreeIgnore=['.idea', '.git$', '\.swp', '__pycache__', '\.pyc$', '\.orig$', '.python-version']
+let NERDTreeIgnore=['.idea', '.git$', '\.swp', '__pycache__', '.vscode', '\.pyc$', '\.orig$', '.python-version']
 let NERDTreeShowHidden=1
+nmap ,cf :NERDTreeFind<CR>
 
 "==== syntastic settings
 let g:syntastic_python_checkers=['pylama']
@@ -161,17 +164,17 @@ let g:ycm_python_binary_path = 'python'
 nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 "==== taglist
-let Tlist_Auto_Highlight_Tag=1  
+let Tlist_Auto_Highlight_Tag=1
 let Tlist_Auto_Open=0
-let Tlist_Auto_Update=1  
-let Tlist_Display_Tag_Scope=1  
-let Tlist_Exit_OnlyWindow=1  
-let Tlist_Enable_Dold_Column=1  
-let Tlist_File_Fold_Auto_Close=1  
-let Tlist_Show_One_File=1  
-let Tlist_Use_Right_Window=1  
-let Tlist_Use_SingleClick=1  
-let Tlist_Ctags_Cmd="$(which ctags)" 
+let Tlist_Auto_Update=1
+let Tlist_Display_Tag_Scope=1
+let Tlist_Exit_OnlyWindow=1
+let Tlist_Enable_Dold_Column=1
+let Tlist_File_Fold_Auto_Close=1
+let Tlist_Show_One_File=1
+let Tlist_Use_Right_Window=1
+let Tlist_Use_SingleClick=1
+let Tlist_Ctags_Cmd="$(which ctags)"
 nnoremap <silent> <F8> :TlistToggle<CR>
 
 "==== Color Scheme
@@ -182,17 +185,20 @@ endif
 
 "==== ctrlp
 let g:ctrlp_map='<c-p>'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)|(__pycache__)$',
+  \ 'file': '\v\.(exe|so|dll|swp|pyc)$',
+  \ }
 
 
-"==== powerline
-let g:powerline_pycmd='py'
-
-set guifont=Meslo\ LG\ M\ Regular\ for\ Powerline:h12.5
+"==== airline
+set guifont=Meslo\ LG\ M\ Regular\ for\ Powerline:h13.5
 "set guifont=Inconsolata\ for\ Powerline:h15
-let g:Powerline_symbols = 'fancy'
+let g:airline_powerline_fonts = 1
+let g:airline_theme='powerlineish'
 set t_Co=256
 set encoding=utf-8
-"set fillchars+=stl:\ ,stlnc:\
+set fillchars+=stl:\ ,stlnc:\
 set termencoding=utf-8
 set term=xterm-256color
 set laststatus=2 " Always display the statusline in all windows
